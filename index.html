@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AAU Life Simulator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 { color: #008751; margin-bottom: 5px; }
+        .stats-box {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .btn {
+            background-color: #008751;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-bottom: 10px;
+            transition: 0.2s;
+        }
+        .btn:hover { background-color: #00663d; }
+        .log {
+            color: #555;
+            font-style: italic;
+            margin-top: 15px;
+            min-height: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>🇳🇬 AAU LIFE</h1>
+    <p>Survive and hustle your way to the top in campus!</p>
+    
+    <div class="stats-box">
+        Account Balance: ₦<span id="balance">0</span>
+    </div>
+
+    <button class="btn" onclick="hustle()">💼 Run a Campus Hustle (Earn ₦5,000)</button>
+    <button class="btn" onclick="resetGame()" style="background-color: #d32f2f;">🔄 Reset Progress</button>
+
+    <p class="log" id="game-log">Welcome to AAU! Time to make some money.</p>
+</div>
+
+<script>
+    let balance = parseInt(localStorage.getItem('aau_balance')) || 0;
+    document.getElementById('balance').innerText = balance.toLocaleString();
+
+    function hustle() {
+        balance += 5000;
+        localStorage.setItem('aau_balance', balance);
+        document.getElementById('balance').innerText = balance.toLocaleString();
+        
+        const logs = [
+            "You printed assignment past questions for course mates! +₦5,000",
+            "You helped a student clear their hostel logistics smoothly! +₦5,000",
+            "Your campus data reselling hustle paid off today! +₦5,000"
+        ];
+        const randomLog = logs[Math.floor(Math.random() * logs.length)];
+        document.getElementById('game-log').innerText = randomLog;
+    }
+
+    function resetGame() {
+        if(confirm("Are you sure you want to clear your hustle progress?")) {
+            balance = 0;
+            localStorage.setItem('aau_balance', balance);
+            document.getElementById('balance').innerText = balance;
+            document.getElementById('game-log').innerText = "Started fresh on campus!";
+        }
+    }
+</script>
+
+</body>
+      </html>
+      
