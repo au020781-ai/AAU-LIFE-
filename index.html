@@ -3,99 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AAU Life Simulator</title>
+    <title>AAU LIFE | The Ultimate Ekpoma Student Simulator</title>
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f6f9;
+        * {
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0d1b2a;
+            color: #e0e1dd;
+            padding: 15px;
             display: flex;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
         }
+
         .game-container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            max-width: 500px;
+            background: #1b263b;
             width: 100%;
+            max-width: 600px;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+            border: 2px solid #00b4d8;
+        }
+
+        .game-title {
             text-align: center;
+            font-size: 2.2rem;
+            color: #00b4d8;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
         }
-        h1 { color: #008751; margin-bottom: 5px; }
-        .stats-box {
-            background-color: #e8f5e9;
+        .game-title span { color: #90e0ef; }
+        .subtitle {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #8892b0;
+            margin-bottom: 20px;
+        }
+
+        /* --- Dashboard Grid --- */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            background: #0d1b2a;
             padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #415a77;
         }
-        .btn {
-            background-color: #008751;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
+        .dash-item {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #a5a5a5;
+        }
+        .dash-val {
+            display: block;
+            font-size: 1.15rem;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 2px;
+        }
+        .naira { color: #2ecc71; }
+        .stamina { color: #f1c40f; }
+
+        /* --- Log Monitor --- */
+        .console-box {
+            background: #000814;
+            height: 130px;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            color: #00f5d4;
+            border: 1px solid #333;
+        }
+
+        /* --- Hub Panels --- */
+        .menu-title {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #90e0ef;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .action-panel {
+            background: #415a77;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .btn-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        button {
+            background: #1b263b;
+            color: #fff;
+            border: 1px solid #00b4d8;
+            padding: 12px 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            width: 100%;
-            margin-bottom: 10px;
-            transition: 0.2s;
+            transition: all 0.2s ease;
         }
-        .btn:hover { background-color: #00663d; }
-        .log {
-            color: #555;
-            font-style: italic;
-            margin-top: 15px;
-            min-height: 20px;
+        button:hover:not(:disabled) {
+            background: #00b4d8;
+            color: #0d1b2a;
+            transform: translateY(-2px);
         }
+        button:disabled {
+            border-color: #555;
+            color: #777;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .full-width { grid-column: span 2; }
+        .danger-btn { border-color: #e63946; color: #e63946; }
+        .danger-btn:hover:not(:disabled) { background: #e63946; color: #fff; }
+
+        /* --- Scoreboard Section --- */
+        .leaderboard-list {
+            background: #0d1b2a;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #22333b;
+        }
+
+        .center-setup { text-align: center; padding: 30px 10px; }
+        .center-setup p { margin-bottom: 20px; font-size: 1.1rem; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <h1>🇳🇬 AAU LIFE</h1>
-    <p>Survive and hustle your way to the top in campus!</p>
-    
-    <div class="stats-box">
-        Account Balance: ₦<span id="balance">0</span>
+    <div class="game-container">
+        <div class="game-title">AAU<span>LIFE</span></div>
+        <div class="subtitle">The Ultimate Ekpoma Campus Simulator v2.0.0</div>
+
+        <!-- Setup Screen -->
+        <div id="screen-setup" class="center-setup">
+            <p>Will you clear your school fees easily or hustle across campus to survive Ekpoma life?</p>
+            <button onclick="initiateLife()" style="width: 80%; font-size: 1.2rem; background: #00b4d8; color: #0d1b2a;">Gain Admission into AAU</button>
+        </div>
+
+        <!-- Main Game Interface -->
+        <div id="screen-game" class="hidden">
+            <div class="dashboard">
+                <div class="dash-item">Student Status: <span id="ui-bracket" class="dash-val">Jambite</span></div>
+                <div class="dash-item">Pocket Money: <span id="ui-cash" class="dash-val naira">₦0</span></div>
+                <div class="dash-item">Stamina / Energy: <span id="ui-energy" class="dash-val stamina">100%</span></div>
+                <div class="dash-item">Academic Status: <span id="ui-semester" class="dash-val" style="color:#90e0ef;">100 Level (Sem 1)</span></div>
+            </div>
+
+            <div class="menu-title">Campus News & Events</div>
+            <div class="console-box" id="console-logs"></div>
+
+            <!-- Academic Engine -->
+            <div class="action-panel">
+                <div class="menu-title">Academics & Campus Hustle</div>
+                <div class="btn-grid">
+                    <button onclick="triggerAction('study')">Attend Lecture at Main Hall</button>
+                    <button onclick="triggerAction('work')">Work Campus Job (<span id="ui-job">Cyber Café</span>)</button>
+                </div>
+            </div>
+
+            <!-- Student Lifestyle -->
+            <div class="action-panel">
+                <div class="menu-title">Welfare & Socials</div>
+                <div class="btn-grid">
+                    <button onclick="triggerAction('eat')">Eat at Love Garden (-₦2,500)</button>
+                    <button onclick="triggerAction('party')">Party at Ekpoma Club (-₦30,000)</button>
+                </div>
+            </div>
+
+            <!-- Risk Dynamics -->
+            <div class="action-panel">
+                <div class="menu-title">Risky Hustles & Graduation</div>
+                <div class="btn-grid">
+                    <button class="danger-btn" onclick="triggerAction('run_hustle')">Run Night Crypt Hustle</button>
+                    <button onclick="triggerAction('graduate')" style="border-color:#00f5d4; color:#00f5d4;">Apply for Graduation</button>
+                </div>
+            </div>
+
+            <!-- Classmate Scoreboard Sharing -->
+            <div class="action-panel">
+                <div class="menu-title">🏆 Shared Campus Leaderboard</div>
+                <p style="font-size:0.8rem; margin-bottom:8px; color:#bcccda;">Paste score codes shared by your classmates here to add them to your board:</p>
+                <div style="display: flex; gap: 8px; margin-bottom: 10px;">
+                    <input type="text" id="input-code" placeholder="Paste classmate's code here" style="flex: 1; padding: 8px; border-radius: 4px; border: none; background: #0d1b2a; color:#fff; font-size:0.85rem;">
+                    <button onclick="importClassmateScore()" style="padding: 5px 12px; font-size: 0.85rem;">Add Player</button>
+                </div>
+                <div class="leaderboard-list" id="ui-leaderboard">
+                    <div class="leaderboard-item" style="color:#00b4d8; font-weight:bold;"><span>Player Name</span><span>Semesters Taken</span></div>
+                    <!-- Dynamically populated entries -->
+                </div>
+                <button class="full-width" style="border-color:#888; color:#888; margin-top:15px; padding:8px;" onclick="resetSimulation()">Reset My Current Life</button>
+            </div>
+        </div>
     </div>
 
-    <button class="btn" onclick="hustle()">💼 Run a Campus Hustle (Earn ₦5,000)</button>
-    <button class="btn" onclick="resetGame()" style="background-color: #d32f2f;">🔄 Reset Progress</button>
+    <script>
+        let player = {
+            bracket: "Jambite",
+            cash: 25000,
+            energy: 100,
+            semesters: 1,
+            jobLevel: 1,
+            academicPoints: 0
+        };
 
-    <p class="log" id="game-log">Welcome to AAU! Time to make some money.</p>
-</div>
-
-<script>
-    let balance = parseInt(localStorage.getItem('aau_balance')) || 0;
-    document.getElementById('balance').innerText = balance.toLocaleString();
-
-    function hustle() {
-        balance += 5000;
-        localStorage.setItem('aau_balance', balance);
-        document.getElementById('balance').innerText = balance.toLocaleString();
-        
-        const logs = [
-            "You printed assignment past questions for course mates! +₦5,000",
-            "You helped a student clear their hostel logistics smoothly! +₦5,000",
-            "Your campus data reselling hustle paid off today! +₦5,000"
+        const jobTiers = [
+            { title: "Campus Bike Rider", pay: 6000 },
+            { title: "Assignment Writer", pay: 15000 },
+            { title: "Yaba-Market Agent", pay: 35000 },
+            { title: "Remote Freelancer", pay: 90000 }
         ];
-        const randomLog = logs[Math.floor(Math.random() * logs.length)];
-        document.getElementById('game-log').innerText = randomLog;
-    }
 
-    function resetGame() {
-        if(confirm("Are you sure you want to clear your hustle progress?")) {
-            balance = 0;
-            localStorage.setItem('aau_balance', balance);
-            document.getElementById('balance').innerText = balance;
-            document.getElementById('game-log').innerText = "Started fresh on campus!";
+        // Shared local browser leaderboard array
+        let classmatesLeaderboard = [
+            { name: "You (Best Run)", score: 8 }
+        ];
+
+        const consoleLogs = document.getElementById("console-logs");
+
+        function writeLog(text) {
+            consoleLogs.innerHTML += `<div>&gt; ${text}</div>`;
+            consoleLogs.scrollTop = consoleLogs.scrollHeight;
         }
-    }
-</script>
 
-</body>
-      </html>
-      
+        function renderStats() {
+            document.getElementById("ui-bracket").innerText = player.bracket;
+            document.getElementById("ui-cash").innerText = "₦" + player.cash.toLocaleString();
+            document.getElementById("ui-energy").innerText = player.energy + "%";
+            
+            let level = Math.min(400, 100 + Math.floor((player.semesters - 1) / 2) * 100);
+            let semNum = ((player.semesters - 1) % 2) + 1;
+            document.getElementById("ui-semester").innerText = `${level} Level (Sem ${semNum})`;
+            
+            let currentJob = jobTiers[Math.min(player.jobLevel - 1, jobTiers.length - 1)];
+            document.getElementById("ui-job").innerText = currentJob.title;
+
+    
